@@ -1,50 +1,59 @@
-# Welcome to your Expo app 👋
+# Push it Up
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Herzlich willkommen zum `Read Me` meines Abschlussprojektes im ÜK 335 (Mobile Apps entwickeln).
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+## App starten
+1. Wenn noch nie eine Expo-App auf dem System gestartet wurde, folgen Sie [diesem Tutorial](https://docs.expo.dev/get-started/create-a-project/). Es ist sehr leicht verständlich
+2. In den Projekt Root Ordner mit `cd` wechseln
+3. Folgende Befehle ausführen:
+```sh
+npm install
+npx expo start
 ```
+4. Den Anweisungen im Terminal zur Emulation des Gerätes folgen (variiert je nach Emulator, jedoch Anweisungen dazu im Terminal)
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Projektdoku
 
-## Learn more
+### Projekt-Pitch
+Laut der WHO bewegen sich über **1,4 Milliarden Menschen nicht genug**, was zu **gesundheitlichen Problemen** führt. Meine App will dieses Problem bekämpfen und versuchen, Personen zu motivieren, sich sportlich herauszufordern.
 
-To learn more about developing your project with Expo, look at the following resources:
+Meine App zählt die Push-ups eines Nutzers und speichert die Bestzahl jedes Tages. Dies ermöglicht dem Nutzenden, seinen **Fortschritt zu verfolgen**.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Anforderungen
 
-## Join the community
+#### Funktional
 
-Join our community of developers creating universal apps.
+##### Home View
+- Wenn der Nutzer die App öffnet, so sieht er die Home-View.
+- Auf der Home-View wird der Nutzer begrüsst.
+- Auf der Home-View, unter der Begrüssung, sieht der Nutzer eine Übersicht seiner Resultate in den letzten 7 Tagen.
+- Auf der Home-View, unter der Übersicht, sieht der Nutzer einen Knopf mit dem Titel - «Start the Challange!». Der Nutzer kann auf diesen Knopf drücken.
+- Wenn der Nutzer auf den «Start the Challange!»-Knopf drückt, so wird er auf die Workout-View weitergeleitet.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+##### Workout View
+- In der Workout-View sieht der Nutzer eine grosse Zahl in der Mitte der Applikation, diese Zahl sind die bis jetzt geschafften Push Up’s.
+- Wenn der Proximity-Sensor eine Bewegung in der Nähe bestimmt, welche sich nach einer kurzen Zeit wieder wegbewegt, zählt dies als einen Push Up.
+- Wenn der Proximity-Sensor innerhalb von 5 Sekunden keinen Push Up mehr registriert, so wird die Challenge automatisch beendet und das Handy vibriert, um den Nutzer zu informieren.
+
+#### Nicht Funktional
+- Die UI der App ist ohne Erklärung bedienbar und kann ohne Probleme von einem neuen Nutzer verstanden werden.
+- Ein neuer Nutzer kann den App Workflow ohne Hilfe und ohne grosse Verzögerung beenden.
+- Die App kann jede Funktion auch ohne Internetverbindung vollständig ausführen. Alle notwendigen Daten werden lokal gespeichert.
+- Die Zähler Funktion der App hat einen erlaubten Fehlerbereich von grösser-gleich 20 Prozent. Bei 20 Push Ups’s darf es beim Counter maximal eine Abweichung von 4 geben.
+
+
+### Implementierung
+#### Sensordaten auslesen
+Sobald ich die Sensordaten des `Proximity`-Sensors auslesen wollte, merkte ich, dass ich ein grosses Problem habe. **<span style="text-decoration: underline; text-decoration-color: red;">Der `Proximity`-Sensor ist nicht verfügbar</span>** auf expo (siehe [doku](https://docs.expo.dev/versions/latest/sdk/sensors/)). Meine Optionen waren nun:
+
+1. Auf Flutter wechseln, da dort `Proximity`-Sensoren verfügbar sind
+2. Projekt abbrechen und ein neues starten
+3. Mit anderen Sensoren, die Push-ups zählen
+
+Ich entschied mich gegen Variante 1, da ich in den letzten drei Tagen nur mit Expo gearbeitet habe. All dieses Know-how nun wegzuwerfen und von null zu starten, konnte ich mir nicht leisten.
+
+Variante 2 war auch nicht wählbar für mich, da ich bereits viel in die Planung investiert habe, das alles neu zu machen hätte meinen Zeitplan pulverisiert.
+
+Variante 3 war auch nicht perfekt, da ich beispielsweise in meinem Storyboard und in den Anforderungen davon ausgegangen bin, dass ich den Proximity Sensor verwenden kann. Jedoch war dies die einzige übriggebliebene Option.
+
+Ich startete die Daten von drei Sensoren (Gyroskop, Beschleunigungsmesser, Bewegungsmesser), um zu sehen, wie sie sich während der Bewegungen eines Push-ups verhalten. Ich fand heraus, dass der Bewegungsmesser die besten Daten lieferte, ich musste jetzt einfach mein Handy während des Push-ups in der Hosentasche haben.
