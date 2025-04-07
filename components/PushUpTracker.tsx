@@ -1,4 +1,4 @@
-import { Text, View, Vibration } from 'react-native';
+import { Text, View, Vibration, TouchableOpacity } from 'react-native';
 import { DeviceMotion } from 'expo-sensors';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'expo-router';
@@ -25,6 +25,19 @@ export function PushUpTracker({
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
   const [countdown, setCountdown] = useState(3);
+  const handleTerminate = () => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    SecureStore.getItemAsync(today).then((savedCount) => {
+      if (savedCount && parseInt(savedCount, 10) >= pushupCountRef.current) {
+      } else {
+        SecureStore.setItemAsync(today, pushupCountRef.current.toString());
+      }
+
+      // Return to home screen
+      router.replace('/');
+    });
+  };
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
@@ -124,7 +137,26 @@ export function PushUpTracker({
   }, [isReady]);
 
   return (
-    <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+    <View style={{ width: '100%', height: '100%', padding: 20, alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+      {/* X button to terminate workout */}
+      <TouchableOpacity 
+        onPress={handleTerminate}
+        style={{
+          position: 'absolute',
+          top: 30,
+          right: 30,
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: 'rgba(255, 255, 255, 0.3)',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 10
+        }}
+      >
+        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>X</Text>
+      </TouchableOpacity>
+      
       {!isReady ? (
         <>
           <Text style={{ fontSize: 128, textAlign: 'center', color: 'white' }}>{countdown}</Text>

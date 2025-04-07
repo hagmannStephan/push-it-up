@@ -9,18 +9,20 @@ const INACTIVITY_TIMEOUT = 5000; // Terminate the app if no activity for 5 secon
 // This function was developed with the assistance of AI tools, such as but not limited to ChatGPT and Claude.ai
 export default function Workout() {
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <PushUpTracker 
-          SAMPLE_RATE={SAMPLE_RATE}
-          PUSHUP_THRESHOLD={PUSHUP_THRESHOLD}
-          MIN_PUSHUP_INTERVAL={MIN_PUSHUP_INTERVAL}
-          INACTIVITY_TIMEOUT={INACTIVITY_TIMEOUT}
-        />
-      </View>
+    <View style={styles.container}>
+      <PushUpTracker
+        SAMPLE_RATE={SAMPLE_RATE}
+        PUSHUP_THRESHOLD={PUSHUP_THRESHOLD}
+        MIN_PUSHUP_INTERVAL={MIN_PUSHUP_INTERVAL}
+        INACTIVITY_TIMEOUT={INACTIVITY_TIMEOUT}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  }
 });
