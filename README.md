@@ -62,3 +62,6 @@ Ich startete die Daten von drei Sensoren (Gyroskop, Beschleunigungsmesser, Beweg
 
 #### Datenspeicherung
 Für die persistente Datenspeicherung nutze ich `expo-secure-store` die integrierte Key-Value-Store-Lösung von expo, da diese sehr einfach zu verwenden ist. Als Schlüssel benutze ich das Datum des heutigen Tages, als Wert die erreichte Zahl Push-ups.
+
+#### Namensgebung
+Ich wollte zuerst die App 'Pump it Up' nennen, wegen des EDM-Lieds, jedoch entschied ich mich später in meinem Projekt dazu, den Namen auf 'Push it Up' zu ändern, da dies auch noch einen Zusammenhanf zum Nutzen der App erstellt.
