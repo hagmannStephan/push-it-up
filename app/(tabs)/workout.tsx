@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { PushUpTracker } from '@/components/PushUpTracker';
 
 const SAMPLE_RATE = 100; // milliseconds
