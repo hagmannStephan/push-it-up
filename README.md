@@ -32,8 +32,10 @@ Meine App zählt die Push-ups eines Nutzers und speichert die Bestzahl jedes Tag
 
 ##### Workout View
 - In der Workout-View sieht der Nutzer eine grosse Zahl in der Mitte der Applikation, diese Zahl sind die bis jetzt geschafften Push Up’s.
-- Wenn der Proximity-Sensor eine Bewegung in der Nähe bestimmt, welche sich nach einer kurzen Zeit wieder wegbewegt, zählt dies als einen Push Up.
-- Wenn der Proximity-Sensor innerhalb von 5 Sekunden keinen Push Up mehr registriert, so wird die Challenge automatisch beendet und das Handy vibriert, um den Nutzer zu informieren.
+- Wenn der Sensor eine Bewegung bestimmt, welche sich wie ein Push Up verhält, so zählt diese 
+als einen Push Up.
+- Wenn der Sensor innerhalb von 5 Sekunden keinen Push Up mehr registriert, so wird die 
+Challenge automatisch beendet und das Handy vibriert, um den Nutzer zu informieren.
 
 #### Nicht Funktional
 - Die UI der App ist ohne Erklärung bedienbar und kann ohne Probleme von einem neuen Nutzer verstanden werden.
@@ -42,7 +44,7 @@ Meine App zählt die Push-ups eines Nutzers und speichert die Bestzahl jedes Tag
 - Die Zähler Funktion der App hat einen erlaubten Fehlerbereich von grösser-gleich 20 Prozent. Bei 20 Push Ups’s darf es beim Counter maximal eine Abweichung von 4 geben.
 
 
-### Implementierung
+### Implementierung - Key Decisions
 #### Sensordaten auslesen
 Sobald ich die Sensordaten des `Proximity`-Sensors auslesen wollte, merkte ich, dass ich ein grosses Problem habe. **<span style="text-decoration: underline; text-decoration-color: red;">Der `Proximity`-Sensor ist nicht verfügbar</span>** auf expo (siehe [doku](https://docs.expo.dev/versions/latest/sdk/sensors/)). Meine Optionen waren nun:
 
@@ -57,3 +59,6 @@ Variante 2 war auch nicht wählbar für mich, da ich bereits viel in die Planung
 Variante 3 war auch nicht perfekt, da ich beispielsweise in meinem Storyboard und in den Anforderungen davon ausgegangen bin, dass ich den Proximity Sensor verwenden kann. Jedoch war dies die einzige übriggebliebene Option.
 
 Ich startete die Daten von drei Sensoren (Gyroskop, Beschleunigungsmesser, Bewegungsmesser), um zu sehen, wie sie sich während der Bewegungen eines Push-ups verhalten. Ich fand heraus, dass der Bewegungsmesser die besten Daten lieferte, ich musste jetzt einfach mein Handy während des Push-ups in der Hosentasche haben.
+
+#### Datenspeicherung
+Für die persistente Datenspeicherung nutze ich `expo-secure-store` die integrierte Key-Value-Store-Lösung von expo, da diese sehr einfach zu verwenden ist. Als Schlüssel benutze ich das Datum des heutigen Tages, als Wert die erreichte Zahl Push-ups.

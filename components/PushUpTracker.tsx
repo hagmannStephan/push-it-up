@@ -2,6 +2,7 @@ import { Text, View, Vibration } from 'react-native';
 import { DeviceMotion } from 'expo-sensors';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 
 // This function was developed with the assistance of AI tools, such as but not limited to ChatGPT and Claude.ai
 export function PushUpTracker({
@@ -17,6 +18,7 @@ export function PushUpTracker({
 }) {
   const [motionData, setMotionData] = useState({ x: 0, y: 0, z: 0 });
   const [pushupCount, setPushupCount] = useState(0);
+  const pushupCountRef = useRef(0);
   const [isGoingDown, setIsGoingDown] = useState(false);
   const [lastPushupTime, setLastPushupTime] = useState(0);
   const lastActivityTimeRef = useRef(Date.now());
@@ -31,7 +33,7 @@ export function PushUpTracker({
           clearInterval(countdownInterval);
           setIsReady(true);
           // Vibrate to indicate tracker is ready
-          Vibration.vibrate(200);
+          Vibration.vibrate(500);
           return 0;
         }
         return prev - 1;
@@ -74,7 +76,11 @@ export function PushUpTracker({
 
       // Check if enough time has passed since the last push-up
       if (currentTime - lastPushupTime > MIN_PUSHUP_INTERVAL) {
-        setPushupCount((prev) => prev + 1);
+        setPushupCount((prev) => {
+          const newCount = prev + 1;
+          pushupCountRef.current = newCount;
+          return newCount;
+        });
         setLastPushupTime(currentTime);
       }
     }
@@ -89,9 +95,24 @@ export function PushUpTracker({
       const timeSinceLastActivity = now - lastActivityTimeRef.current;
 
       if (timeSinceLastActivity > INACTIVITY_TIMEOUT) {
+        // Stop the motion sensor
         clearInterval(interval);
+
+
         // Vibration feedback for inactivity
         Vibration.vibrate([0, 250, 75, 250, 75, 500]);
+        // Save the push-up if highscore of the day
+        const today = new Date().toISOString().split('T')[0];
+
+        SecureStore.getItemAsync(today).then((savedCount) => {
+          if (savedCount && parseInt(savedCount, 10) >= pushupCountRef.current) {
+            return; // Do nothing if the saved count is greater or equal
+          }
+
+          // Save the new highscore for the day
+          SecureStore.setItemAsync(today, pushupCountRef.current.toString());
+        });
+
         // Redirect to the home screen after inactivity
         router.replace('/');
       }

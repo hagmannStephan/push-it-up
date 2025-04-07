@@ -2,6 +2,7 @@ import { Button, View, StyleSheet, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import { ProgressChart } from '../../components/ProgressChart';
 
 // This function was developed with the assistance of AI tools, such as but not limited to ChatGPT and Claude.ai
 export default function HomeScreen() {
@@ -21,34 +22,71 @@ export default function HomeScreen() {
   
     return () => clearTimeout(timeout);
   }, []);
-  
+
   return (
-    <View>
-      {todayCount !== null && (
-        <Text style={styles.score}>Today's Push-Ups: {todayCount}</Text>
-      )}
-      <View style={styles.button}>
+    <View style={styles.container}>
+      <Text style={styles.greeting}>Hello Stephan!</Text>
+      <Text style={styles.subHeading}>Want to set a new record for today?</Text>
+      <View style={styles.chartContainer}>
+        <ProgressChart />
+      </View>
+      <View style={styles.buttonContainer}>
         <Button
-          title="Go to Workout"
+          title="Start the Challenge!"
           onPress={() => {
             router.push('/workout');
           }}
+          color="#841584"
         />
       </View>
+      {todayCount !== null && (
+        <View style={styles.textContainer}>
+          <Text style={styles.score}>
+            Today you managed to do {todayCount} Pushup's in a single set!
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    fontSize: 20,
-    color: 'blue',
+  container: {
+    padding: 20,
+  },
+  greeting: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
     textAlign: 'center',
-    marginTop: 150
+    marginBottom: 20,
+  },
+  subHeading: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#d3d3d3',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  chartContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    marginHorizontal: 20,
+    marginTop: 60,
+    borderRadius: 5,
+    overflow: 'hidden',
+    backgroundColor: '#301c4a',
+    padding: 10,
+  },
+  textContainer: {
+    marginHorizontal: 20,
+    marginTop: 20,
   },
   score: {
-    marginTop: 100,
-    fontSize: 24,
+    fontSize: 18,
     textAlign: 'center',
     color: 'white',
   },
