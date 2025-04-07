@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { Text, View, Vibration } from 'react-native';
 import { DeviceMotion } from 'expo-sensors';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'expo-router';
@@ -61,14 +61,12 @@ export function PushUpTracker({
       const interval = setInterval(() => {
         const now = Date.now();
         const timeSinceLastActivity = now - lastActivityTimeRef.current;
-
-        console.log('Time since last activity:', timeSinceLastActivity);
-        console.log('INACTIVITY_TIMEOUT:', INACTIVITY_TIMEOUT);
   
         if (timeSinceLastActivity > INACTIVITY_TIMEOUT) {
           clearInterval(interval);
+          // Vibration feedback for inactivity
+          Vibration.vibrate([0, 250, 75, 250, 75, 500]);
           // Redirect to the home screen after inactivity
-          console.log('Inactivity detected. Redirecting to home screen...');
           router.replace('/');
         }
       // Check every second
