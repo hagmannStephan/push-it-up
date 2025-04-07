@@ -1,68 +1,20 @@
-import { Text, View } from 'react-native';
-import { Gyroscope, Accelerometer, DeviceMotion } from 'expo-sensors';
-import { useState, useEffect } from 'react';
+import { View } from 'react-native';
+import { PushUpTracker } from '@/components/PushUpTracker';
 
 const SAMPLE_RATE = 100; // milliseconds
 const PUSHUP_THRESHOLD = 1.4; // Distance from the ground to consider a push-up (got to this measurement by testing)
 const MIN_PUSHUP_INTERVAL = 750; // Minimum time (ms) between push-ups
 
+// This function was developed with the assistance of AI tools, such as but not limited to ChatGPT and Claude.ai
 export default function HomeScreen() {
-  const [gyroData, setGyroData] = useState({ x: 0, y: 0, z: 0 });
-  const [accelData, setAccelData] = useState({ x: 0, y: 0, z: 0 });
-  const [motionData, setMotionData] = useState({ x: 0, y: 0, z: 0 });
-  const [pushupCount, setPushupCount] = useState(0);
-  const [isGoingDown, setIsGoingDown] = useState(false);
-  const [lastPushupTime, setLastPushupTime] = useState(0);
-
-  useEffect(() => {
-    Gyroscope.setUpdateInterval(SAMPLE_RATE);
-    Accelerometer.setUpdateInterval(SAMPLE_RATE);
-    DeviceMotion.setUpdateInterval(SAMPLE_RATE);
-
-    const gyroSubscription = Gyroscope.addListener(setGyroData);
-    const accelSubscription = Accelerometer.addListener(setAccelData);
-    const motionSubscription = DeviceMotion.addListener((data) => {
-      if (data.acceleration) {
-        setMotionData(data.acceleration);
-      }
-    });
-
-    return () => {
-      gyroSubscription.remove();
-      accelSubscription.remove();
-      motionSubscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    const currentTime = Date.now();
-
-    if (motionData.z < -PUSHUP_THRESHOLD && !isGoingDown) {
-      setIsGoingDown(true);
-    }
-    if (motionData.z > PUSHUP_THRESHOLD && isGoingDown) {
-      setIsGoingDown(false);
-
-      // Check if enough time has passed since the last push-up
-      if (currentTime - lastPushupTime > MIN_PUSHUP_INTERVAL) {
-        setPushupCount((prev) => prev + 1);
-        setLastPushupTime(currentTime);
-      }
-    }
-  }, [motionData.z]);
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text>Gyroscope:</Text>
-      <Text>X: {gyroData.x.toFixed(2)} Y: {gyroData.y.toFixed(2)} Z: {gyroData.z.toFixed(2)}</Text>
-      
-      <Text>Accelerometer:</Text>
-      <Text>X: {accelData.x.toFixed(2)} Y: {accelData.y.toFixed(2)} Z: {accelData.z.toFixed(2)}</Text>
-      
-      <Text>Device Motion (Acceleration):</Text>
-      <Text>X: {motionData.x?.toFixed(2)} Y: {motionData.y?.toFixed(2)} Z: {motionData.z?.toFixed(2)}</Text>
-      
-      <Text>Push-ups Count: {pushupCount}</Text>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <PushUpTracker
+      SAMPLE_RATE={SAMPLE_RATE}
+      PUSHUP_THRESHOLD={PUSHUP_THRESHOLD}
+      MIN_PUSHUP_INTERVAL={MIN_PUSHUP_INTERVAL}
+      />
     </View>
   );
 }
