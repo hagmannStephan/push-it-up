@@ -3,7 +3,8 @@ import { Gyroscope, Accelerometer, DeviceMotion } from 'expo-sensors';
 import { useState, useEffect } from 'react';
 
 const SAMPLE_RATE = 100; // milliseconds
-const PUSHUP_THRESHOLD = 1.5; // Adjust this based on testing
+const PUSHUP_THRESHOLD = 1.4; // Distance from the ground to consider a push-up (got to this measurement by testing)
+const MIN_PUSHUP_INTERVAL = 750; // Minimum time (ms) between push-ups
 
 export default function HomeScreen() {
   const [gyroData, setGyroData] = useState({ x: 0, y: 0, z: 0 });
@@ -11,6 +12,7 @@ export default function HomeScreen() {
   const [motionData, setMotionData] = useState({ x: 0, y: 0, z: 0 });
   const [pushupCount, setPushupCount] = useState(0);
   const [isGoingDown, setIsGoingDown] = useState(false);
+  const [lastPushupTime, setLastPushupTime] = useState(0);
 
   useEffect(() => {
     Gyroscope.setUpdateInterval(SAMPLE_RATE);
@@ -33,12 +35,19 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
+    const currentTime = Date.now();
+
     if (motionData.z < -PUSHUP_THRESHOLD && !isGoingDown) {
       setIsGoingDown(true);
     }
     if (motionData.z > PUSHUP_THRESHOLD && isGoingDown) {
       setIsGoingDown(false);
-      setPushupCount((prev) => prev + 1);
+
+      // Check if enough time has passed since the last push-up
+      if (currentTime - lastPushupTime > MIN_PUSHUP_INTERVAL) {
+        setPushupCount((prev) => prev + 1);
+        setLastPushupTime(currentTime);
+      }
     }
   }, [motionData.z]);
 
