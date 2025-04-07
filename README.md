@@ -65,3 +65,8 @@ Für die persistente Datenspeicherung nutze ich `expo-secure-store` die integrie
 
 #### Namensgebung
 Ich wollte zuerst die App 'Pump it Up' nennen, wegen des EDM-Lieds, jedoch entschied ich mich später in meinem Projekt dazu, den Namen auf 'Push it Up' zu ändern, da dies auch noch einen Zusammenhanf zum Nutzen der App erstellt.
+
+### Paketdiagramm
+Nachfolgend ist ein Paketdiagramm aufgeführt, um die Projektstruktur zu visualisieren:
+
+![Paketdiagramm](/assets/images/paketdiagramm.drawio.png)
