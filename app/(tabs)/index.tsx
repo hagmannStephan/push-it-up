@@ -53,6 +53,8 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: 'black',
+    flex: 1,
   },
   greeting: {
     fontSize: 24,

@@ -98,6 +98,7 @@ export function PushUpTracker({
         // Stop the motion sensor
         clearInterval(interval);
 
+        console.log("Managed to complete " + pushupCountRef.current + " push-ups!")
 
         // Vibration feedback for inactivity
         Vibration.vibrate([0, 250, 75, 250, 75, 500]);
