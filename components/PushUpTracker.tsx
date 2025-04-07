@@ -1,21 +1,26 @@
 import { Text, View } from 'react-native';
 import { DeviceMotion } from 'expo-sensors';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'expo-router';
 
 // This function was developed with the assistance of AI tools, such as but not limited to ChatGPT and Claude.ai
 export function PushUpTracker({
-    SAMPLE_RATE = 100, // milliseconds
-    PUSHUP_THRESHOLD = 1.4, // Distance from the ground to consider a push-up
-    MIN_PUSHUP_INTERVAL = 750, // Minimum time (ms) between push-ups
+    SAMPLE_RATE = 100,
+    PUSHUP_THRESHOLD = 1.4,
+    MIN_PUSHUP_INTERVAL = 750,
+    INACTIVITY_TIMEOUT = 5000,
 }: {
     SAMPLE_RATE?: number;
     PUSHUP_THRESHOLD?: number;
     MIN_PUSHUP_INTERVAL?: number;
+    INACTIVITY_TIMEOUT?: number;
 }) {
     const [motionData, setMotionData] = useState({ x: 0, y: 0, z: 0 });
     const [pushupCount, setPushupCount] = useState(0);
     const [isGoingDown, setIsGoingDown] = useState(false);
     const [lastPushupTime, setLastPushupTime] = useState(0);
+    const lastActivityTimeRef = useRef(Date.now());
+    const router = useRouter();
   
     useEffect(() => {
       DeviceMotion.setUpdateInterval(SAMPLE_RATE);
@@ -33,6 +38,10 @@ export function PushUpTracker({
   
     useEffect(() => {
       const currentTime = Date.now();
+
+      if (Math.abs(motionData.z) > 0.5) {
+        lastActivityTimeRef.current = currentTime;
+      }
   
       if (motionData.z < -PUSHUP_THRESHOLD && !isGoingDown) {
         setIsGoingDown(true);
@@ -47,11 +56,31 @@ export function PushUpTracker({
         }
       }
     }, [motionData.z]);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const now = Date.now();
+        const timeSinceLastActivity = now - lastActivityTimeRef.current;
+
+        console.log('Time since last activity:', timeSinceLastActivity);
+        console.log('INACTIVITY_TIMEOUT:', INACTIVITY_TIMEOUT);
+  
+        if (timeSinceLastActivity > INACTIVITY_TIMEOUT) {
+          clearInterval(interval);
+          // Redirect to the home screen after inactivity
+          console.log('Inactivity detected. Redirecting to home screen...');
+          router.replace('/');
+        }
+      // Check every second
+      }, 1000);
+  
+      return () => clearInterval(interval);
+    }, []);
   
     return (
     <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-      <Text style={{ fontSize: 128, textAlign: 'center' }}>{pushupCount}</Text>
-      <Text style={{ fontSize: 24, textAlign: 'center' }}>Keep Pushing!</Text>
+      <Text style={{ fontSize: 128, textAlign: 'center', color: 'white' }}>{pushupCount}</Text>
+      <Text style={{ fontSize: 24, textAlign: 'center', color: 'white' }}>Keep Pushing!</Text>
     </View>
     );
   }
