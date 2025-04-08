@@ -70,3 +70,71 @@ Ich wollte zuerst die App 'Pump it Up' nennen, wegen des EDM-Lieds, jedoch entsc
 Nachfolgend ist ein Paketdiagramm aufgeführt, um die Projektstruktur zu visualisieren:
 
 ![Paketdiagramm](/assets/images/paketdiagramm.drawio.png)
+
+### Reflexion
+#### Absicht (SOLL)
+Die Rahmenbedingungen, welche ich zwingend für meine App umsetzen muss, sind folgende:
+
+- Sensoren auslesen und Daten verarbeiten
+- Aktuator verwenden
+- Mehr als eine View verwenden
+
+In den funktionalen und nicht funktionalen Anforderungen habe ich folgende Anforderungen für meine App definiert:
+
+##### Funktional
+- Home View
+    - Beim öffnen der App sieht der Nutzer die "Home View"
+    - Begrüssungstext wird angezeigt
+    - Die Übersicht der letzten 7 Tage wird unter der Begrüssung angezeigt
+    - «Start the Challenge!»-Button führt zur Workout-View
+- Workout View
+    - Grosse Zahl zeigt Anzahl geschaffter Push-Ups
+    - Sensor zählt Push-Ups
+    - Nach 5 Sekunden ohne Bewegung wird die Challenge beendet, das Handy vibriert
+- Speicherung der Daten
+    - Nach dem Workout Rückkehr zur Home-View
+    - Score des Tages wird angezeigt
+    - Nur Highscores des Tages werden gespeichert
+
+##### Nicht-Funktional
+- Simple und selbsterklährende UI
+- Offline-Funktionalität
+- Zähler darf max. 20 % Abweichung haben
+
+#### Resultat (IST)
+Die drei Rahmenbedingungen konnte ich erfolgreich umsetzen.
+- Sensoren (werden verwendet, um die Push-ups zu zählen)
+- Aktuator (wird für Hinweise (Counter, Workout beendet) in der Workout-View verwenden)
+- Mehr als eine View (Es gibt die Home und die Work-out View)
+
+Zudem habe ich auch noch zusätzliche Rahmenbedingungen umgesetzt:
+- Kommunikation zwischen zwei Views (Workout Daten werden in Workout generiert und in Home angezeigt)
+- Persistente, lokale Datenablage (via `expo-secure-store`)
+- Icon verwenden
+
+Bei den funktionalen und nicht funktionalen Anforderungen sieht es ähnlich aus.
+
+Die `Home View` konnte ich voll und ganz umsetzen.
+Die `Workout View` habe ich voll umgesetzt, aber noch zwei Zusatzfeatures implementiert:
+- Countdown bevor der Zähler beginnt, um sich parat zu machen
+- Möglichkeit, Work-out auch mit einem Abbruch-Knopf zu beenden
+Die `Nicht funktionalen Anforderungen` konnten auch erfüllt werden. Die UI ist sehr verständlich, nach dem Testerfeedback. Jedoch kann die Abweichung auch die 20%-Marke überschreiten, je nachdem, wo man das Handy platziert. In der Po-Tasche der Hose werden generell die akkuratesten Resultate gemessen, mit einer sehr kleinen Abweichung von ca. 5 %.
+
+
+#### Erkenntnis
+
+##### Wo hatte ich Probleme?
+
+**Sensor:** Ein grosses Problem hatte ich damit, dass ich den Proximity-Sensor in Expo nicht verwenden konnte, obwohl meine Planung auf diesem Sensor beruhte.
+Ich ging dieses Problem an, indem ich die restlichen Sensoren-Daten auf meinem Bildschirm anzeigen liess und beobachtete, welche sich während eines Push-ups verändern. Ich bekam die besten Resultate mit dem Bewegungssensor und ich entschied mich dann auch für diesen
+**Persistente Datenspeicherung:** Ich wollte eigentlich eine SQLite DB machen, da ich davon ausging, dass das Setup davon sehr simpel ist, jedoch wurde es dann schnell kompliziert. Nach einigem informieren fand ich heraus, dass es schon einen Key-Value Store in Expo gibt, welcher schon aufgesetzt ist und sehr einfach zu benutzen ist.
+
+##### Was lief gut?
+**Aktuator:** Mit Expo einen Aktuator zu verwenden ist enorm simpel und intuitiv, und ich konnte diese Aufgaben im Handumdrehen erledigen.
+
+**Sensordaten auslesen:** Sobald ich einen passenden Sensor gefunden habe, war es sehr simpel, die Daten auszulesen und zu verarbeiten. Dies lag sicher auch daran, dass ich mich mit der TS-Syntax bereits auskannte.
+
+##### Was würde ich nächstes Mal besser machen?
+Es gibt zwei Dinge, welche ich nächstes Mal anders machen würde:
+1. Ich würde mir besser überlegen, was für eine Idee ich umsetzen will. Am Wochenende fielen mir noch einige andere tolle App-Ideen ein, aber da ich bereits mit meiner `Push it Up`-App begonnen hatte, konnte ich meine Projektidee nicht mehr wechseln.
+2. Ich würde mich vor dem Projektstart kurz informieren, ob alle Ressourcen, welche ich brauche, mit der gewünschten Technologie verfügbar sind. Ich ging davon aus, dass der Sensor sowieso verfügbar ist, jedoch habe ich mich getäuscht.
